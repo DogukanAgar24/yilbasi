@@ -1,0 +1,600 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yıl biterken...</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Dancing+Script:wght@600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* Romantik Gece Mavisi Arka Plan */
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* --- ŞARKI SÖZLERİ ALANI --- */
+        .music-lyrics {
+            display: none;
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            text-align: center;
+            z-index: 210;
+            pointer-events: none;
+            animation: pulseText 4s infinite ease-in-out, fadeInSlow 2s ease-in-out;
+        }
+
+            .music-lyrics p {
+                margin: 10px 0;
+                color: rgba(255, 255, 255, 0.8);
+                font-family: 'Dancing Script', cursive;
+                font-size: 2rem;
+                letter-spacing: 2px;
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            }
+
+        @keyframes pulseText {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        /* 1. AŞAMA: GİRİŞ EKRANI */
+        #intro-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            transition: opacity 1s ease;
+        }
+
+        .sub-note {
+            color: #ff9a9e;
+            font-size: 0.7rem;
+            margin-top: 25px;
+            font-style: italic;
+            opacity: 0.8;
+            animation: fadeIn 6s ease-in-out;
+        }
+
+        h1 {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 4rem;
+            margin: 0;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        p.intro-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            margin-top: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeIn 5s ease-in-out;
+        }
+
+        /* 2. AŞAMA: TEKLİF KARTI */
+        #proposal-card {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            width: 320px;
+            color: white;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            height: 60px;
+            position: relative;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 30;
+        }
+
+        .yes-btn {
+            background: #4caf50;
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+            .yes-btn:hover {
+                transform: scale(1.1);
+            }
+
+        .no-btn {
+            background: #e53935;
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
+            white-space: nowrap;
+        }
+
+        .rose {
+            position: absolute;
+            top: -50px;
+            font-size: 2.5rem;
+            z-index: 100;
+            animation: fall linear forwards;
+        }
+
+        /* --- 3. AŞAMA: BİLET TASARIMI --- */
+        #ticket-container {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 25;
+            animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .ticket {
+            background: #fff;
+            width: 600px;
+            height: 250px;
+            border-radius: 15px;
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticket-left {
+            width: 70%;
+            padding: 30px;
+            border-right: 2px dashed #333;
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #f3f3f3 100%);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+        }
+
+            .ticket-left h2 {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 2.5rem;
+                margin: 0;
+                color: #302b63;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                text-shadow: none;
+            }
+
+        .ticket-info {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+            .ticket-info p {
+                margin: 5px 0;
+            }
+
+            .ticket-info span {
+                font-weight: bold;
+                color: #e53935;
+                margin-left: 5px;
+            }
+
+        .ticket-right {
+            width: 30%;
+            background: #302b63;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .barcode {
+            font-family: 'Courier New', monospace;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            opacity: 0.7;
+        }
+
+        /* Bilet çentikleri */
+        .notch {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #24243e; /* Arka plan rengi */
+            border-radius: 50%;
+            right: 28%;
+            z-index: 30;
+        }
+
+        .notch-top {
+            top: -15px;
+        }
+
+        .notch-bottom {
+            bottom: -15px;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* --- VİDEO ALANI STİLİ --- */
+        #final-video-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInSlow 2s ease-in-out;
+        }
+
+            #final-video-container video {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                filter: blur(10px);
+            }
+
+            100% {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        @keyframes fadeInSlow {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            #proposal-card {
+                width: 85%;
+            }
+
+            .music-lyrics {
+                top: 15%;
+            }
+
+                .music-lyrics p {
+                    font-size: 1.5rem;
+                }
+
+            /* Bilet Mobil Ayarları */
+            .ticket {
+                width: 90%;
+                height: auto;
+                flex-direction: column;
+            }
+
+            .ticket-left {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px dashed #333;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            .ticket-right {
+                width: 100%;
+                height: 80px;
+                flex-direction: row;
+            }
+
+            .barcode {
+                writing-mode: horizontal-tb;
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+
+            .notch {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="final-video-container">
+        <video id="finalVideo">
+            <source src="final-video.mp4" type="video/mp4">
+            Tarayıcınız video oynatmayı desteklemiyor.
+        </video>
+    </div>
+
+    <div id="intro-container">
+        <h1>2026</h1>
+        <p class="intro-text">Gülüşün kadar güzel olsun.</p>
+        <p class="sub-note">(Yılbaşına kadar bekleyemedim 🙈)</p>
+    </div>
+
+    <div id="proposal-card">
+        <h2 style="margin-bottom: 10px;">Cümleyi düşünmek bile heyecanlandırıyor🥂</h2>
+        <p style="text-transform: none; font-size: 0.7rem;">Çıkma teklifinin modası geçmez</p>
+        <p style="font-weight: bold; font-size: 1.2rem; margin-top:20px;">Benimle Fırst Date'e çıkar mısın?</p>
+
+        <div class="btn-group">
+            <button class="yes-btn" id="yesBtn" onclick="acceptDate()">EVET</button>
+            <button class="no-btn" id="noBtn" onclick="handleNoClick()">HAYIR</button>
+        </div>
+    </div>
+
+    <div id="ticket-container">
+        <div class="ticket">
+            <div class="notch notch-top"></div>
+            <div class="notch notch-bottom"></div>
+
+            <div class="ticket-left">
+                <h2>FIRST DATE 🥂</h2>
+                <div class="ticket-info">
+                    <p>MİSAFİR: <span>PRENSES</span></p>
+                    <p>TARİH: <span>ÇOK YAKINDA</span></p>
+                    <p>KONUM: <span>SÜRPRİZ MEKAN</span></p>
+                </div>
+                <p style="margin-top:15px; font-size:0.7rem; opacity:0.6; font-style:italic;">*Bu bilet iptal edilemez, iptal edilmesi teklif dahil edilemez :)</p>
+            </div>
+            <div class="ticket-right">
+                <div class="barcode">ADMIT ONE</div>
+                <p style="font-size:2rem; margin:0;">❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="music-lyrics"></div>
+
+    <canvas id="space"></canvas>
+
+    <audio id="evetSound" src="evetSound.mp3" style="display:none;"></audio>
+
+    <script>
+        // --- 10 SANİYE SAYACI ---
+        setTimeout(() => {
+            document.getElementById('intro-container').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('intro-container').style.display = 'none';
+                const card = document.getElementById('proposal-card');
+                card.style.display = 'block';
+                setTimeout(() => { card.style.opacity = '1'; }, 50);
+            }, 1000);
+        }, 8000); // 8 Saniye
+
+
+        // --- HAYIR BUTONU MANTIĞI ---
+        let noClickCount = 0;
+
+        function handleNoClick() {
+            noClickCount++;
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            const videoContainer = document.getElementById('final-video-container');
+            const videoElement = document.getElementById('finalVideo');
+            const lyricsContainer = document.querySelector('.music-lyrics');
+
+            if (noClickCount === 1) {
+                noBtn.style.transform = "scale(0.85)";
+                noBtn.innerText = "Emin misin? 🥺";
+            }
+            else if (noClickCount === 2) {
+                noBtn.style.transform = "scale(0.6)";
+                noBtn.innerText = "Son şans...";
+            }
+            else if (noClickCount === 3) {
+                // SÜRGÜN
+                noBtn.style.opacity = "0";
+                noBtn.style.pointerEvents = "none";
+                yesBtn.style.transform = "scale(1.3)";
+
+                setTimeout(() => {
+                    noBtn.style.position = "fixed";
+                    noBtn.style.top = "15px";
+                    noBtn.style.left = "15px";
+                    noBtn.style.margin = "0";
+                    noBtn.innerText = "HAYIR";
+                    noBtn.style.transform = "scale(0.5)";
+                    noBtn.style.opacity = "1";
+                    noBtn.style.pointerEvents = "auto";
+                }, 3000);
+            }
+            // --- 4. VE SONRAKİ TIKLAMALAR (VİDEO OYNATMA) ---
+            else if (noClickCount > 3) {
+                document.getElementById('proposal-card').style.display = 'none';
+                noBtn.style.display = 'none';
+                videoContainer.style.display = 'flex';
+                lyricsContainer.style.display = 'block';
+                videoElement.play().catch(e => console.log("Video hatası:", e));
+            }
+        }
+
+        // --- EVET BUTONU VE BİLET GEÇİŞİ ---
+        function acceptDate() {
+            // 1. SESİ OYNAT
+            const sound = document.getElementById('evetSound');
+            if (sound) {
+                sound.volume = 1.0;
+                sound.play().catch(e => console.log("Ses oynatma hatası:", e));
+            }
+
+            // 2. KARTI GÜNCELLE (GEÇİŞ EKRANI)
+            const card = document.getElementById('proposal-card');
+            card.innerHTML = `
+                    <h1 style="font-size:3rem; animation: fadeIn 1s;">En ufak şüphem yoktu :)</h1>
+                    <p style="margin-top:20px;">Harika bir gün olacak😉<br><span style="font-size:0.8rem; opacity:0.8;">Biletin hazırlanıyor...</span></p>
+                `;
+
+            const noBtn = document.getElementById('noBtn');
+            if (noBtn) noBtn.remove();
+
+            // Şarkı sözlerini gizle
+            document.querySelector('.music-lyrics').style.display = 'none';
+
+            // Gülleri yağdır
+            setInterval(createRose, 200);
+
+            // 3. 5 SANİYE SONRA BİLETİ GÖSTER (GÜNCELLENDİ: 5000ms)
+            setTimeout(() => {
+                // Yazıyı gizle
+                card.style.transition = "opacity 1s ease";
+                card.style.opacity = '0';
+
+                setTimeout(() => {
+                    card.style.display = 'none'; // Kartı tamamen kaldır
+
+                    // Bileti göster
+                    const ticket = document.getElementById('ticket-container');
+                    ticket.style.display = 'block';
+                }, 1000); // Solma efekti bitince
+
+            }, 5000); // 5 Saniye bekle
+        }
+
+        // --- GÜLLER ---
+        function createRose() {
+            const rose = document.createElement('div');
+            rose.innerText = "🌹";
+            rose.classList.add('rose');
+            rose.style.left = Math.random() * 100 + 'vw';
+            rose.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(rose);
+            setTimeout(() => { rose.remove(); }, 5000);
+        }
+
+        // --- YILDIZ EFEKTİ ---
+        const starCount = 400;
+        const speed = 2;
+        const canvas = document.getElementById('space');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * width - width / 2;
+                this.y = Math.random() * height - height / 2;
+                this.z = Math.random() * width;
+            }
+            update() {
+                this.z = this.z - speed;
+                if (this.z <= 0) {
+                    this.z = width;
+                    this.x = Math.random() * width - width / 2;
+                    this.y = Math.random() * height - height / 2;
+                }
+            }
+            show() {
+                let x, y, s;
+                x = (this.x / this.z) * width + width / 2;
+                y = (this.y / this.z) * height + height / 2;
+                s = (width - this.z) / width;
+                let r = width / this.z * 0.8;
+                ctx.beginPath();
+                ctx.fillStyle = "white";
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            stars = [];
+            for (let i = 0; i < starCount; i++) { stars.push(new Star()); }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].update();
+                stars[i].show();
+            }
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+    </script>
+</body>
+</html>
